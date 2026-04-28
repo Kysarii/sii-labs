@@ -40,10 +40,7 @@ lrcv = lr_pipeline[-1]
 print("Выбранное C:", lrcv.C_)
 
 sc = lrcv.scores_
-if isinstance(sc, dict):
-    scores_mat = np.asarray(next(iter(sc.values())))
-else:
-    scores_mat = np.asarray(sc)
+scores_mat = np.asarray(next(iter(sc.values())))
 
 best_c_idx = int(np.argmax(scores_mat.mean(axis=0)))
 acc_per_fold = np.ravel(scores_mat[:, best_c_idx])
@@ -80,10 +77,7 @@ lr_pipeline.fit(X_test, y_test_true)
 lrcv_test = lr_pipeline[-1]
 
 sc_test = lrcv_test.scores_
-if isinstance(sc_test, dict):
-    scores_mat_test = np.asarray(next(iter(sc_test.values())))
-else:
-    scores_mat_test = np.asarray(sc_test)
+scores_mat_test = np.asarray(next(iter(sc_test.values())))
 
 best_c_idx_test = int(np.argmax(scores_mat_test.mean(axis=0)))
 test_acc_per_fold = np.ravel(scores_mat_test[:, best_c_idx_test])
