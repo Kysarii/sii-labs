@@ -7,7 +7,7 @@ from sklearn.linear_model import Ridge, LinearRegression, ARDRegression, RANSACR
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 
-train_df = pd.read_csv('data/train(with_interference).csv', sep='\t', header=None)
+train_df = pd.read_csv('data/train.csv', sep='\t', header=None)
 test_df = pd.read_csv('data/test.csv', sep='\t', header=None)
 
 print('Размер train:', train_df.shape)
