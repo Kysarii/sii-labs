@@ -4,31 +4,28 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from sklearn.linear_model import LogisticRegressionCV
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
-from sklearn.inspection import permutation_importance
 from sklearn.metrics import confusion_matrix, classification_report
 
-dataset_train = pd.read_csv("data/disease_train.csv", sep=",", encoding="utf-8")
-dataset_test = pd.read_csv("data/disease_public_test.csv", sep=",", encoding="utf-8")
-dataset_submission = pd.read_csv("data/disease_sample_submission.csv", sep=",", encoding="utf-8")
+dataset_train = pd.read_csv("data/diagnosis_train.csv", sep=";", encoding="utf-8")
+dataset_test = pd.read_csv("data/diagnosis_test.csv", sep=";", encoding="utf-8")
+dataset_submission = pd.read_csv("data/diagnosis_test_submission.csv", sep=";", encoding="utf-8")
 
-X_train = dataset_train[["X1", "X2", "X3", "X4", "X5", "X6", "X7"]]
+X_train = dataset_train[["X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14", "X15", "X16", "X17", "X18", "X19", "X20", "X21", "X22"]]
 y_train = dataset_train["Y"]
 
-X_test = dataset_test[["X1", "X2", "X3", "X4", "X5", "X6", "X7"]]
+X_test = dataset_test[["X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14", "X15", "X16", "X17", "X18", "X19", "X20", "X21", "X22"]]
 y_test_true = dataset_submission["Y"]
 
 lr_pipeline = make_pipeline(
-    MinMaxScaler(),
+    StandardScaler(),
     LogisticRegressionCV(
         cv=10,
         random_state=42,
         max_iter=5000,
-        solver="lbfgs",
         class_weight="balanced",
         l1_ratios=(0.0,),
-        use_legacy_attributes=True,
     ),
 )
 
@@ -67,9 +64,6 @@ print(classification_report(y_train, y_pred_train))
 conf_matrix_train = confusion_matrix(y_train, y_pred_train)
 print(f"Матрица ошибок (train):\n{conf_matrix_train}")
 
-result = permutation_importance(lr_pipeline, X_train, y_train, n_repeats=10, random_state=42)
-importance = result.importances_mean
-
 y_pred_test = lr_pipeline.predict(X_test)
 
 lr_pipeline.fit(X_test, y_test_true)
@@ -100,7 +94,7 @@ plt.tight_layout()
 plt.show()
 
 print("================================")
-print("Отчет классификации: предсказания vs эталон (disease_sample_submission.csv, столбец Y)")
+print("Отчет классификации: предсказания vs эталон (столбец Y)")
 print(classification_report(y_test_true, y_pred_test))
 
 conf_matrix_test = confusion_matrix(y_test_true, y_pred_test)
@@ -135,9 +129,3 @@ plt.ylabel("Эталонный класс")
 plt.title("Матрица ошибок (test vs эталон)")
 plt.show()
 
-plt.figure(figsize=(8, 5))
-plt.bar(X_train.columns, importance)
-plt.xlabel("Features")
-plt.ylabel("Importance")
-plt.title("Feature Importance")
-plt.show()
